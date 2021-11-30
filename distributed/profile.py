@@ -69,7 +69,11 @@ def repr_frame(frame):
 
 def info_frame(frame):
     co = frame.f_code
-    line = linecache.getline(co.co_filename, frame.f_lineno, frame.f_globals).lstrip()
+    try:
+        line = linecache.getline(co.co_filename, frame.f_lineno, frame.f_globals).lstrip()
+    except TypeError:
+        # Workaround for exception if frame.lineno is None.
+        line = ''
     return {
         "filename": co.co_filename,
         "name": co.co_name,
